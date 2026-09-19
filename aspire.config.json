@@ -1,0 +1,5 @@
+{
+    "appHost": {
+        "path": "src\\WorkoutLogger.AppHost\\WorkoutLogger.AppHost.csproj"
+    }
+}
