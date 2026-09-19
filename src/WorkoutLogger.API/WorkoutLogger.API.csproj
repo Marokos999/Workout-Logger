@@ -25,5 +25,9 @@
   <ItemGroup>
     <ProjectReference Include="..\WorkoutLogger.ServiceDefaults\WorkoutLogger.ServiceDefaults.csproj" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Update="Infrastructure\exercises.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
