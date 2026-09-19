@@ -43,7 +43,7 @@ public class AuthService(AppDbContext context, IConfiguration config)
   private string? GenerateToken(User user)
   {
     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
-    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
     var claims = new []
     {

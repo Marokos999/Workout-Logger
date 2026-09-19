@@ -12,7 +12,8 @@ using WorkoutLogger.API.Features.Progress;
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 builder.Services.AddOpenApi();
-builder.AddNpgsqlDbContext<AppDbContext>("workoutdb");
+if (!builder.Environment.IsEnvironment("Testing"))
+    builder.AddNpgsqlDbContext<AppDbContext>("workoutdb");
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<WorkoutService>();
 builder.Services.AddScoped<ExerciseService>();
@@ -38,9 +39,10 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+if (!app.Environment.IsEnvironment("Testing"))
 {
-    var db  = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();
     await DataSeeder.SeedExerciseAsync(db);
 }
@@ -59,3 +61,5 @@ app.MapExerciseEndpoints();
 app.MapProgressEndpoints();
 
 app.Run();
+
+public partial class Program { }
