@@ -43,6 +43,20 @@ public class ProgressService(AppDbContext db)
             .ToList();
     }
 
+    public async Task<List<ExerciseProgressDto>> GetExerciseProgressAsync(Guid userId, Guid exerciseId)
+    {
+        var sets = await db.WorkoutSets
+            .Include(s => s.WorkoutSession)
+            .Where(s => s.WorkoutSession.UserId == userId && s.ExerciseId == exerciseId)
+            .ToListAsync();
+
+        return sets
+            .GroupBy(s => DateOnly.FromDateTime(s.WorkoutSession.StartedAt.Date))
+            .Select(g => new ExerciseProgressDto(g.Key, g.Max(s => s.Weight)))
+            .OrderBy(e => e.Date)
+            .ToList();
+    }
+
     public async Task<List<WorkoutFrequencyDto>> GetWorkoutFrequencyAsync(Guid userId)
     {
         var sessions = await db.WorkoutSessions
@@ -60,3 +74,4 @@ public class ProgressService(AppDbContext db)
 public record ExerciseVolumeDto(Guid ExerciseId, string ExerciseName, decimal TotalVolume, decimal MaxWeight, int TotalSets);
 public record PersonalRecordDto(Guid ExerciseId, string ExerciseName, decimal MaxWeight);
 public record WorkoutFrequencyDto(DateTime Date, int SessionCount);
+public record ExerciseProgressDto(DateOnly Date, decimal MaxWeight);

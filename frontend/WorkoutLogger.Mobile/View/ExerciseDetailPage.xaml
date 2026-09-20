@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:WorkoutLogger.Mobile.ViewModel"
+             x:Class="WorkoutLogger.Mobile.View.ExerciseDetailPage"
+             x:DataType="vm:ExerciseDetailViewModel"
+             Title="{Binding Exercise.Name}">
+
+    <VerticalStackLayout Padding="24" Spacing="20">
+
+        <Border Stroke="#E0E0E0" StrokeThickness="1" Padding="20">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12" />
+            </Border.StrokeShape>
+            <VerticalStackLayout Spacing="12">
+                <Label Text="{Binding Exercise.Name}"
+                       FontSize="24"
+                       FontAttributes="Bold" />
+
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="8">
+                    <Label Grid.Row="0" Grid.Column="0" Text="Mišićna grupa:" FontAttributes="Bold" TextColor="Gray" />
+                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding Exercise.MuscleGroup}" />
+
+                    <Label Grid.Row="1" Grid.Column="0" Text="Oprema:" FontAttributes="Bold" TextColor="Gray" />
+                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding Exercise.Equipment}" />
+                </Grid>
+            </VerticalStackLayout>
+        </Border>
+
+    </VerticalStackLayout>
+
+</ContentPage>

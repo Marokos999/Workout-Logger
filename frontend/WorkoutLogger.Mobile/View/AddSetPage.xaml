@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:WorkoutLogger.Mobile.ViewModel"
+             xmlns:model="clr-namespace:WorkoutLogger.Contracts.Responses;assembly=WorkoutLogger.Contracts"
+             x:Class="WorkoutLogger.Mobile.View.AddSetPage"
+             x:DataType="vm:AddSetViewModel"
+             Title="Dodaj set">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+
+            <Label Text="Vježba" FontAttributes="Bold" />
+            <Picker Title="Odaberi vježbu"
+                    ItemsSource="{Binding Exercises}"
+                    SelectedItem="{Binding SelectedExercise}"
+                    ItemDisplayBinding="{Binding Name}" />
+
+            <Label Text="Broj seta" FontAttributes="Bold" />
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Button Grid.Column="0" Text="-" WidthRequest="48"
+                        Clicked="OnSetNumberDecrement" />
+                <Label Grid.Column="1" Text="{Binding SetNumber}"
+                       HorizontalOptions="Center" VerticalOptions="Center"
+                       FontSize="20" FontAttributes="Bold" />
+                <Button Grid.Column="2" Text="+" WidthRequest="48"
+                        Clicked="OnSetNumberIncrement" />
+            </Grid>
+
+            <Label Text="Ponavljanja" FontAttributes="Bold" />
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Button Grid.Column="0" Text="-" WidthRequest="48"
+                        Clicked="OnRepsDecrement" />
+                <Label Grid.Column="1" Text="{Binding Reps}"
+                       HorizontalOptions="Center" VerticalOptions="Center"
+                       FontSize="20" FontAttributes="Bold" />
+                <Button Grid.Column="2" Text="+" WidthRequest="48"
+                        Clicked="OnRepsIncrement" />
+            </Grid>
+
+            <Label Text="Težina (kg)" FontAttributes="Bold" />
+            <Entry Text="{Binding Weight}" Keyboard="Numeric" Placeholder="0" />
+
+            <Entry Placeholder="Bilješka (opciono)" Text="{Binding Notes}" />
+
+            <Label Text="{Binding ErrorMessage}" TextColor="Red" FontSize="13" />
+
+            <Button Text="Sačuvaj set"
+                    Command="{Binding SaveCommand}"
+                    Margin="0,8,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,7 +1,11 @@
 <Solution>
+  <Folder Name="/frontend/">
+    <Project Path="frontend/WorkoutLogger.Mobile/WorkoutLogger.Mobile.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/WorkoutLogger.API/WorkoutLogger.API.csproj" />
     <Project Path="src/WorkoutLogger.AppHost/WorkoutLogger.AppHost.csproj" />
+    <Project Path="src/WorkoutLogger.Contracts/WorkoutLogger.Contracts.csproj" />
     <Project Path="src/WorkoutLogger.ServiceDefaults/WorkoutLogger.ServiceDefaults.csproj" />
   </Folder>
 </Solution>

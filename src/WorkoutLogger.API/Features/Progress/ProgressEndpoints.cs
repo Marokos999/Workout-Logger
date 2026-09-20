@@ -26,5 +26,11 @@ public static class ProgressEndpoints
         var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
         return Results.Ok(await svc.GetWorkoutFrequencyAsync(userId));
     });
+
+    group.MapGet("/exercise/{exerciseId}", async (Guid exerciseId, ClaimsPrincipal user, ProgressService svc) =>
+    {
+        var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        return Results.Ok(await svc.GetExerciseProgressAsync(userId, exerciseId));
+    });
   }
 }

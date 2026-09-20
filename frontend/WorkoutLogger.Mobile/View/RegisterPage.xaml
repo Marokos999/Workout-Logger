@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:WorkoutLogger.Mobile.ViewModel"
+             x:Class="WorkoutLogger.Mobile.View.RegisterPage"
+             x:DataType="vm:RegisterViewModel"
+             Title="Registracija">
+
+    <VerticalStackLayout Padding="32" Spacing="16" VerticalOptions="Center">
+
+        <Entry Placeholder="Korisničko ime"
+               Text="{Binding Username}" />
+
+        <Entry Placeholder="Email"
+               Text="{Binding Email}"
+               Keyboard="Email" />
+
+        <Entry Placeholder="Lozinka"
+               Text="{Binding Password}"
+               IsPassword="True" />
+
+        <Label Text="{Binding ErrorMessage}"
+               TextColor="Red"
+               FontSize="13" />
+
+        <Button Text="Registruj se"
+                Command="{Binding RegisterCommand}"
+                Margin="0,8,0,0" />
+
+    </VerticalStackLayout>
+
+</ContentPage>

@@ -6,7 +6,7 @@ public class WorkoutSession
   public Guid UserId { get; set; } = Guid.NewGuid();
   public string Name { get; set; } = default!;
   public DateTime StartedAt { get; set; }
-  public DateTime EndedAt { get; set; }
+  public DateTime? EndedAt { get; set; }
   public string? Notes { get; set; }
 
   public User User { get; set; } = null!;

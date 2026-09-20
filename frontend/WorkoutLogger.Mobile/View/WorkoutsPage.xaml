@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:WorkoutLogger.Mobile.ViewModel"
+             x:Class="WorkoutLogger.Mobile.View.WorkoutsPage"
+             x:DataType="vm:WorkoutsViewModel"
+             x:Name="Root"
+             Title="Moji treninzi">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+" Command="{Binding GoToCreateCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <ActivityIndicator Grid.Row="0"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Margin="0,8" />
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Sessions}"
+                        Margin="16">
+            <CollectionView.EmptyView>
+                <Label Text="Nema treninga. Dodaj prvi!"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextColor="Gray" />
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Null}">
+                    <Border Stroke="#E0E0E0" StrokeThickness="1" Margin="0,4" Padding="12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={x:Reference Root}, Path=BindingContext.SelectCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="4">
+                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16" />
+                                <Label Text="{Binding StartedAt, StringFormat='Početak: {0:dd.MM.yyyy HH:mm}'}"
+                                       TextColor="Gray" FontSize="13" />
+                                <Label Text="{Binding EndedAt, StringFormat='Kraj: {0:dd.MM.yyyy HH:mm}'}"
+                                       TextColor="Gray" FontSize="13" />
+                            </VerticalStackLayout>
+                            <Button Grid.Column="1"
+                                    Text="Obriši"
+                                    BackgroundColor="Red"
+                                    TextColor="White"
+                                    FontSize="12"
+                                    Command="{Binding Source={x:Reference Root}, Path=BindingContext.DeleteCommand}"
+                                    CommandParameter="{Binding Id}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>

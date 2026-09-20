@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:WorkoutLogger.Mobile.ViewModel"
+             xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Maui;assembly=LiveChartsCore.SkiaSharpView.Maui"
+             x:Class="WorkoutLogger.Mobile.View.ProgressPage"
+             x:DataType="vm:ProgressViewModel"
+             Title="Napredak">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Odjavi se" Command="{Binding LogoutCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="20">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Margin="0,8" />
+
+            <!-- Volumen po vježbi - bar chart -->
+            <Label Text="Ukupni volumen po vježbi"
+                   FontAttributes="Bold"
+                   FontSize="16"
+                   TextColor="#512BD4" />
+
+            <lvc:CartesianChart Series="{Binding VolumeSeries}"
+                                XAxes="{Binding VolumeXAxes}"
+                                YAxes="{Binding VolumeYAxes}"
+                                HeightRequest="220" />
+
+            <!-- Napredak po vježbi - line chart -->
+            <Label Text="Napredak po vježbi"
+                   FontAttributes="Bold"
+                   FontSize="16"
+                   TextColor="#512BD4"
+                   Margin="0,4,0,0" />
+
+            <Picker Title="Izaberi vježbu"
+                    ItemsSource="{Binding Records}"
+                    ItemDisplayBinding="{Binding ExerciseName}"
+                    SelectedItem="{Binding SelectedRecord}" />
+
+            <ActivityIndicator IsRunning="{Binding IsChartBusy}"
+                               IsVisible="{Binding IsChartBusy}" />
+
+            <lvc:CartesianChart Series="{Binding ProgressSeries}"
+                                XAxes="{Binding ProgressXAxes}"
+                                YAxes="{Binding ProgressYAxes}"
+                                HeightRequest="220" />
+
+            <!-- Personalni rekordi lista -->
+            <Label Text="Personalni rekordi"
+                   FontAttributes="Bold"
+                   FontSize="16"
+                   TextColor="#512BD4"
+                   Margin="0,4,0,0" />
+
+            <CollectionView ItemsSource="{Binding Records}">
+                <CollectionView.EmptyView>
+                    <Label Text="Nema podataka." TextColor="Gray" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Null}">
+                        <Border Stroke="#E0E0E0" StrokeThickness="1" Margin="0,4" Padding="12">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <Label Grid.Column="0"
+                                       Text="{Binding ExerciseName}"
+                                       FontAttributes="Bold"
+                                       FontSize="15"
+                                       VerticalOptions="Center" />
+                                <Label Grid.Column="1"
+                                       Text="{Binding MaxWeight, StringFormat='{0} kg'}"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       TextColor="#512BD4"
+                                       VerticalOptions="Center" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

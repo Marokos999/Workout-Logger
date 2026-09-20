@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:WorkoutLogger.Mobile.ViewModel"
+             x:Class="WorkoutLogger.Mobile.View.CreateWorkoutPage"
+             x:DataType="vm:CreateWorkoutViewModel"
+             Title="Novi trening">
+
+    <VerticalStackLayout Padding="24" Spacing="16">
+
+        <Entry Placeholder="Naziv treninga"
+               Text="{Binding Name}" />
+
+        <Editor Placeholder="Bilješke (opciono)"
+                Text="{Binding Notes}"
+                HeightRequest="100"
+                AutoSize="TextChanges" />
+
+        <Label Text="{Binding ErrorMessage}"
+               TextColor="Red"
+               FontSize="13" />
+
+        <Button Text="Kreiraj trening"
+                Command="{Binding CreateCommand}"
+                Margin="0,8,0,0" />
+
+    </VerticalStackLayout>
+
+</ContentPage>

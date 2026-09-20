@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell x:Class="WorkoutLogger.Mobile.AppShell"
+       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:view="clr-namespace:WorkoutLogger.Mobile.View"
+       FlyoutBehavior="Disabled">
+
+    <ShellContent Route="login"
+                  Shell.NavBarIsVisible="False"
+                  Shell.TabBarIsVisible="False"
+                  ContentTemplate="{DataTemplate view:LoginPage}" />
+
+    <TabBar>
+        <ShellContent Route="workouts"
+                      Title="Treninzi"
+                      ContentTemplate="{DataTemplate view:WorkoutsPage}" />
+        <ShellContent Route="exercises"
+                      Title="Vježbe"
+                      ContentTemplate="{DataTemplate view:ExercisesPage}" />
+        <ShellContent Route="progress"
+                      Title="Napredak"
+                      ContentTemplate="{DataTemplate view:ProgressPage}" />
+    </TabBar>
+
+</Shell>
