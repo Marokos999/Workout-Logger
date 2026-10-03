@@ -8,4 +8,7 @@
     <Project Path="src/WorkoutLogger.Contracts/WorkoutLogger.Contracts.csproj" />
     <Project Path="src/WorkoutLogger.ServiceDefaults/WorkoutLogger.ServiceDefaults.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WorkoutLogger.Tests/WorkoutLogger.Tests.csproj" />
+  </Folder>
 </Solution>

@@ -84,4 +84,27 @@ public class AuthEndpointsTests(TestWebAppFactory factory) : IClassFixture<TestW
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
+
+    [Theory]
+    [InlineData("", "valid@test.com", "Pass123!")]
+    [InlineData("user", "", "Pass123!")]
+    [InlineData("user", "valid@test.com", "abc")]
+    public async Task Register_InvalidInput_Returns400(string username, string email, string password)
+    {
+        var response = await _client.PostAsJsonAsync("/api/auth/register",
+            new { username, email, password });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("", "Pass123!")]
+    [InlineData("valid@test.com", "")]
+    public async Task Login_MissingFields_Returns400(string email, string password)
+    {
+        var response = await _client.PostAsJsonAsync("/api/auth/login",
+            new { email, password });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
 }

@@ -76,4 +76,36 @@ public class ExerciseEndpointsTests(TestWebAppFactory factory) : IClassFixture<T
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
+
+    [Fact]
+    public async Task CreateExercise_Returns201_WithData()
+    {
+        await AuthenticateAsync();
+
+        var response = await _client.PostAsJsonAsync("/api/exercises", new
+        {
+            name = "Cable Fly",
+            muscleGroup = "Chest",
+            equipment = "Cable"
+        });
+
+        Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+        var json = await response.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.Equal("Cable Fly", json.GetProperty("name").GetString());
+    }
+
+    [Fact]
+    public async Task CreateExercise_EmptyName_Returns400()
+    {
+        await AuthenticateAsync();
+
+        var response = await _client.PostAsJsonAsync("/api/exercises", new
+        {
+            name = "",
+            muscleGroup = "Chest",
+            equipment = "Cable"
+        });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
 }

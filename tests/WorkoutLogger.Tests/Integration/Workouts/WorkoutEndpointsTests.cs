@@ -92,6 +92,39 @@ public class WorkoutEndpointsTests(TestWebAppFactory factory) : IClassFixture<Te
     }
 
     [Fact]
+    public async Task CreateSession_EmptyName_Returns400()
+    {
+        await AuthenticateAsync();
+        var response = await _client.PostAsJsonAsync("/api/workouts", new { name = "", notes = (string?)null });
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task AddSet_InvalidReps_Returns400()
+    {
+        await AuthenticateAsync();
+
+        using var scope = factory.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<WorkoutLogger.API.Infrastructure.AppDbContext>();
+        var exercise = db.Exercises.First();
+
+        var createResponse = await _client.PostAsJsonAsync("/api/workouts", new { name = "Test", notes = (string?)null });
+        var created = await createResponse.Content.ReadFromJsonAsync<JsonElement>();
+        var sessionId = created.GetProperty("id").GetString();
+
+        var response = await _client.PostAsJsonAsync($"/api/workouts/{sessionId}/sets", new
+        {
+            exerciseId = exercise.Id,
+            setNumber = 1,
+            reps = 0,
+            weight = 100.0,
+            notes = (string?)null
+        });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
     public async Task AddSet_Returns201()
     {
         await AuthenticateAsync();
