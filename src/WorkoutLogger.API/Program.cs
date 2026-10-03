@@ -20,6 +20,9 @@ builder.Services.AddScoped<WorkoutService>();
 builder.Services.AddScoped<ExerciseService>();
 builder.Services.AddScoped<ProgressService>();
 
+if (!builder.Environment.IsEnvironment("Testing"))
+    builder.Services.AddHostedService<MigrationHostedService>();
+
 
 builder.Services.AddRateLimiter(options =>
 {
@@ -65,13 +68,6 @@ app.UseExceptionHandler(errApp => errApp.Run(async ctx =>
     await ctx.Response.WriteAsJsonAsync(new { error = message });
 }));
 
-if (!app.Environment.IsEnvironment("Testing"))
-{
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await db.Database.MigrateAsync();
-    await DataSeeder.SeedExerciseAsync(db);
-}
 app.MapOpenApi();
 app.MapScalarApiReference();
 

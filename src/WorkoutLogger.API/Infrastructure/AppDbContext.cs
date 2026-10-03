@@ -10,6 +10,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
   public DbSet<WorkoutSession> WorkoutSessions { get; set; }
   public DbSet<Exercise> Exercises { get; set; }
   public DbSet<WorkoutSet> WorkoutSets { get; set; }
+  public DbSet<RefreshToken> RefreshTokens { get; set; }
 
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,6 +28,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
       e.HasOne(w => w.User)
         .WithMany(u => u.WorkoutSessions)
         .HasForeignKey(w => w.UserId)
+        .OnDelete(DeleteBehavior.Cascade);
+    });
+
+    modelBuilder.Entity<RefreshToken>(e =>
+    {
+      e.HasKey(r => r.Id);
+      e.HasIndex(r => r.Token).IsUnique();
+      e.HasOne(r => r.User)
+        .WithMany(u => u.RefreshTokens)
+        .HasForeignKey(r => r.UserId)
         .OnDelete(DeleteBehavior.Cascade);
     });
 

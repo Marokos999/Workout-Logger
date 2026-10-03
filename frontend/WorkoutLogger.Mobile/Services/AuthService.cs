@@ -5,24 +5,39 @@ namespace WorkoutLogger.Mobile.Services;
 
 public class AuthService(HttpClient http) : ApiService(http)
 {
+    private const string TokenKey = "jwt_token";
+    private const string RefreshKey = "refresh_token";
+
     public async Task<string?> LoginAsync(string email, string password)
     {
-        var result = await PostAsync<TokenResponse>("/api/auth/login", new LoginRequest(email, password));
-        if (result?.Token is null) return null;
-        await SecureStorage.SetAsync("jwt_token", result.Token);
+        var result = await PostAsync<AuthResponse>("/api/auth/login", new LoginRequest(email, password));
+        if (result is null) return null;
+        await StoreTokensAsync(result);
         return result.Token;
     }
 
     public async Task<string?> RegisterAsync(string username, string email, string password)
     {
-        var result = await PostAsync<TokenResponse>("/api/auth/register", new RegisterRequest(username, email, password));
-        if (result?.Token is null) return null;
-        await SecureStorage.SetAsync("jwt_token", result.Token);
+        var result = await PostAsync<AuthResponse>("/api/auth/register", new RegisterRequest(username, email, password));
+        if (result is null) return null;
+        await StoreTokensAsync(result);
         return result.Token;
     }
 
+    public async Task<bool> RefreshAsync()
+    {
+        var refreshToken = await SecureStorage.GetAsync(RefreshKey);
+        if (refreshToken is null) return false;
+
+        var result = await PostAsync<AuthResponse>("/api/auth/refresh", new RefreshRequest(refreshToken));
+        if (result is null) return false;
+
+        await StoreTokensAsync(result);
+        return true;
+    }
+
     public async Task<string?> GetTokenAsync() =>
-        await SecureStorage.GetAsync("jwt_token");
+        await SecureStorage.GetAsync(TokenKey);
 
     public async Task<string?> GetClaimAsync(string claimName)
     {
@@ -37,7 +52,15 @@ public class AuthService(HttpClient http) : ApiService(http)
         return doc.RootElement.TryGetProperty(claimName, out var v) ? v.GetString() : null;
     }
 
-    public void Logout() =>
-        SecureStorage.Remove("jwt_token");
+    public void Logout()
+    {
+        SecureStorage.Remove(TokenKey);
+        SecureStorage.Remove(RefreshKey);
+    }
 
+    private static async Task StoreTokensAsync(AuthResponse response)
+    {
+        await SecureStorage.SetAsync(TokenKey, response.Token);
+        await SecureStorage.SetAsync(RefreshKey, response.RefreshToken);
+    }
 }

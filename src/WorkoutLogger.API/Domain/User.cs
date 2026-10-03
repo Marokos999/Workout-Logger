@@ -10,5 +10,6 @@ public class User
 
 
   public ICollection<WorkoutSession> WorkoutSessions { get; set; } = [];
+  public ICollection<RefreshToken> RefreshTokens { get; set; } = [];
 
 }

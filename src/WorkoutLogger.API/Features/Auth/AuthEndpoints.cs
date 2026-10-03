@@ -18,10 +18,10 @@ public static class AuthEndpoints
                 ?? Validate.MinLength(req.Password, 6, "Password");
             if (err is not null) return err;
 
-            var token = await auth.RegisterAsync(req.Username, req.Email, req.Password);
-            return token is null
+            var response = await auth.RegisterAsync(req.Username, req.Email, req.Password);
+            return response is null
                 ? Results.Conflict("Email već postoji.")
-                : Results.Ok(new { token });
+                : Results.Ok(response);
         });
 
         group.MapPost("/login", async (LoginRequest req, AuthService auth) =>
@@ -30,17 +30,28 @@ public static class AuthEndpoints
                 ?? Validate.Required(req.Password, "Password");
             if (err is not null) return err;
 
-            var token = await auth.LoginAsync(req.Email, req.Password);
-            return token is null
+            var response = await auth.LoginAsync(req.Email, req.Password);
+            return response is null
                 ? Results.Unauthorized()
-                : Results.Ok(new { token });
+                : Results.Ok(response);
         });
-        group.MapPost("/logout", (HttpContext ctx) =>
+
+        group.MapPost("/refresh", async (RefreshRequest req, AuthService auth) =>
         {
-            return Results.Ok();
-        }).RequireAuthorization();
+            if (string.IsNullOrWhiteSpace(req.RefreshToken))
+                return Results.BadRequest("RefreshToken je obavezan.");
+
+            var response = await auth.RefreshAsync(req.RefreshToken);
+            return response is null
+                ? Results.Unauthorized()
+                : Results.Ok(response);
+        });
+
+        group.MapPost("/logout", (HttpContext ctx) => Results.Ok())
+            .RequireAuthorization();
     }
 }
 
 public record RegisterRequest(string Username, string Email, string Password);
 public record LoginRequest(string Email, string Password);
+public record RefreshRequest(string RefreshToken);

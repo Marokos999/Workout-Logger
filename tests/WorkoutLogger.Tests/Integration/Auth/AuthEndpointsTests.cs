@@ -23,6 +23,46 @@ public class AuthEndpointsTests(TestWebAppFactory factory) : IClassFixture<TestW
         var json = await response.Content.ReadFromJsonAsync<JsonElement>();
         Assert.True(json.TryGetProperty("token", out var token));
         Assert.NotEmpty(token.GetString()!);
+        Assert.True(json.TryGetProperty("refreshToken", out var rt));
+        Assert.NotEmpty(rt.GetString()!);
+    }
+
+    [Fact]
+    public async Task Refresh_ValidToken_Returns200WithNewTokens()
+    {
+        var reg = await _client.PostAsJsonAsync("/api/auth/register", new
+        {
+            username = "refreshuser",
+            email = "refresh@test.com",
+            password = "Pass123!"
+        });
+        var regJson = await reg.Content.ReadFromJsonAsync<JsonElement>();
+        var refreshToken = regJson.GetProperty("refreshToken").GetString()!;
+
+        var response = await _client.PostAsJsonAsync("/api/auth/refresh", new { refreshToken });
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        var json = await response.Content.ReadFromJsonAsync<JsonElement>();
+        Assert.True(json.TryGetProperty("token", out var newToken));
+        Assert.NotEmpty(newToken.GetString()!);
+    }
+
+    [Fact]
+    public async Task Refresh_UsedToken_Returns401()
+    {
+        var reg = await _client.PostAsJsonAsync("/api/auth/register", new
+        {
+            username = "reusedtoken",
+            email = "reused@test.com",
+            password = "Pass123!"
+        });
+        var regJson = await reg.Content.ReadFromJsonAsync<JsonElement>();
+        var refreshToken = regJson.GetProperty("refreshToken").GetString()!;
+
+        await _client.PostAsJsonAsync("/api/auth/refresh", new { refreshToken });
+        var secondResponse = await _client.PostAsJsonAsync("/api/auth/refresh", new { refreshToken });
+
+        Assert.Equal(HttpStatusCode.Unauthorized, secondResponse.StatusCode);
     }
 
     [Fact]
