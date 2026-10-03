@@ -1,0 +1,34 @@
+name: Android Build
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'frontend/**'
+      - 'src/WorkoutLogger.Contracts/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'frontend/**'
+      - 'src/WorkoutLogger.Contracts/**'
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install MAUI workload
+        run: dotnet workload install maui-android
+
+      - name: Restore dependencies
+        run: dotnet restore frontend/WorkoutLogger.Mobile/WorkoutLogger.Mobile.csproj
+
+      - name: Build Android (Debug)
+        run: dotnet build frontend/WorkoutLogger.Mobile/WorkoutLogger.Mobile.csproj -f net10.0-android -c Debug --no-restore

@@ -1,3 +1,5 @@
+using WorkoutLogger.Contracts.Requests;
+
 namespace WorkoutLogger.API.Features.Exercises;
 
 public static class ExerciseEndpoints
@@ -16,6 +18,14 @@ public static class ExerciseEndpoints
     {
       var exercise = await svc.GetByIdAsync(id);
       return exercise is null ? Results.NotFound() : Results.Ok(exercise);
+    });
+
+    group.MapPost("/", async (CreateExerciseRequest request, ExerciseService svc) =>
+    {
+      if (string.IsNullOrWhiteSpace(request.Name)) return Results.BadRequest("Name is required.");
+      var exercise = await svc.CreateAsync(request.Name.Trim(), request.MuscleGroup.Trim(), request.Equipment.Trim());
+      return Results.Created($"/api/exercises/{exercise.Id}",
+          new WorkoutLogger.Contracts.Responses.ExerciseResponse(exercise.Id, exercise.Name, exercise.MuscleGroup, exercise.Equipment));
     });
   }
 }

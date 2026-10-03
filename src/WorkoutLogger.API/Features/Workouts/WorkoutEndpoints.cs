@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using WorkoutLogger.Contracts.Responses;
 
 namespace WorkoutLogger.API.Features.Workouts;
@@ -11,47 +10,47 @@ public static class WorkoutEndpoints
 
     group.MapGet("/", async (ClaimsPrincipal user, WorkoutService service) =>
     {
-      var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+      var userId = Guid.Parse(user.FindFirstValue("sub")!);
       var sessions = await service.GetSessionAsync(userId);
       return Results.Ok(sessions.Select(ToDto));
     });
 
     group.MapGet("/{id:guid}", async (Guid id, ClaimsPrincipal user, WorkoutService service) =>
     {
-      var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+      var userId = Guid.Parse(user.FindFirstValue("sub")!);
       var session = await service.GetSessionByIdAsync(id, userId);
       return session is null ? Results.NotFound() : Results.Ok(ToDto(session));
     });
 
     group.MapPost("/", async (CreateSessionRequest request, ClaimsPrincipal user, WorkoutService service) =>
     {
-      var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+      var userId = Guid.Parse(user.FindFirstValue("sub")!);
       var session = await service.CreateSessionAsync(userId, request.Name, request.Notes);
       return Results.Created($"/api/workouts/{session.Id}", ToDto(session));
     });
 
-    group.MapPatch("/{id:guid}/end", async (Guid id,ClaimsPrincipal user, WorkoutService service) =>
+    group.MapPatch("/{id:guid}/end", async (Guid id, ClaimsPrincipal user, WorkoutService service) =>
     {
-      var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+      var userId = Guid.Parse(user.FindFirstValue("sub")!);
       return await service.EndSessionAsync(id, userId) ? Results.Ok() : Results.NotFound();
     });
 
-    group.MapDelete("/{id:guid}", async (Guid id,ClaimsPrincipal user, WorkoutService service) =>
+    group.MapDelete("/{id:guid}", async (Guid id, ClaimsPrincipal user, WorkoutService service) =>
     {
-      var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+      var userId = Guid.Parse(user.FindFirstValue("sub")!);
       return await service.DeleteSessionAsync(id, userId) ? Results.Ok() : Results.NotFound();
     });
 
-    group.MapPost("/{id:guid}/sets", async (Guid id,AddSetRequest  request ,ClaimsPrincipal user, WorkoutService service) =>
+    group.MapPost("/{id:guid}/sets", async (Guid id, AddSetRequest request, ClaimsPrincipal user, WorkoutService service) =>
     {
-      var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+      var userId = Guid.Parse(user.FindFirstValue("sub")!);
       var set = await service.AddSetAsync(id, userId, request.ExerciseId, request.SetNumber, request.Reps, request.Weight, request.Notes);
       return Results.Created($"/api/workouts/{id}/set/{set.Id}", set);
     });
 
-    group.MapDelete("/sets/{setId:guid}", async (Guid setId,ClaimsPrincipal user, WorkoutService service) =>
+    group.MapDelete("/sets/{setId:guid}", async (Guid setId, ClaimsPrincipal user, WorkoutService service) =>
     {
-      var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+      var userId = Guid.Parse(user.FindFirstValue("sub")!);
       return await service.DeleteSetAsync(setId, userId) ? Results.NoContent() : Results.NotFound();
     });
   }

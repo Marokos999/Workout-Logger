@@ -1,6 +1,3 @@
-using System.Security.Claims;
-using Npgsql.Replication;
-
 namespace WorkoutLogger.API.Features.Progress;
 
 public static class ProgressEndpoints
@@ -9,27 +6,27 @@ public static class ProgressEndpoints
   {
     var group = app.MapGroup("/api/progress").RequireAuthorization();
 
-    group.MapGet("/volume", async (ClaimsPrincipal user, ProgressService svc) =>
+    group.MapGet("/volume", async (System.Security.Claims.ClaimsPrincipal user, ProgressService svc) =>
     {
-        var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = Guid.Parse(user.FindFirstValue("sub")!);
         return Results.Ok(await svc.GetVolumeByExerciseAsync(userId));
     });
 
-    group.MapGet("/records", async (ClaimsPrincipal user, ProgressService svc) =>
+    group.MapGet("/records", async (System.Security.Claims.ClaimsPrincipal user, ProgressService svc) =>
     {
-        var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = Guid.Parse(user.FindFirstValue("sub")!);
         return Results.Ok(await svc.GetPersonalRecordsAsync(userId));
     });
 
-    group.MapGet("/frequency", async (ClaimsPrincipal user, ProgressService svc) =>
+    group.MapGet("/frequency", async (System.Security.Claims.ClaimsPrincipal user, ProgressService svc) =>
     {
-        var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = Guid.Parse(user.FindFirstValue("sub")!);
         return Results.Ok(await svc.GetWorkoutFrequencyAsync(userId));
     });
 
-    group.MapGet("/exercise/{exerciseId}", async (Guid exerciseId, ClaimsPrincipal user, ProgressService svc) =>
+    group.MapGet("/exercise/{exerciseId}", async (Guid exerciseId, System.Security.Claims.ClaimsPrincipal user, ProgressService svc) =>
     {
-        var userId = Guid.Parse(user.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        var userId = Guid.Parse(user.FindFirstValue("sub")!);
         return Results.Ok(await svc.GetExerciseProgressAsync(userId, exerciseId));
     });
   }

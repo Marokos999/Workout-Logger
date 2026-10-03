@@ -23,4 +23,8 @@ public partial class ExercisesViewModel(ExerciseService exercises) : ObservableO
     [RelayCommand]
     private static async Task SelectAsync(ExerciseResponse exercise) =>
         await Shell.Current.GoToAsync($"exercise-detail?id={exercise.Id}");
+
+    [RelayCommand]
+    private static async Task GoToCreateAsync() =>
+        await Shell.Current.GoToAsync("create-exercise");
 }

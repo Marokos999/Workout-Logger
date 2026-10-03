@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:WorkoutLogger.Mobile.ViewModel"
+             x:Class="WorkoutLogger.Mobile.View.CreateExercisePage"
+             x:DataType="vm:CreateExerciseViewModel"
+             Title="Nova vježba">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+
+            <Label Text="Naziv vježbe" FontAttributes="Bold" />
+            <Entry Text="{Binding Name}" Placeholder="npr. Bench Press" />
+
+            <Label Text="Mišićna grupa" FontAttributes="Bold" />
+            <Entry Text="{Binding MuscleGroup}" Placeholder="npr. Chest" />
+
+            <Label Text="Oprema" FontAttributes="Bold" />
+            <Entry Text="{Binding Equipment}" Placeholder="npr. Barbell" />
+
+            <Label Text="{Binding ErrorMessage}" TextColor="Red" FontSize="13" />
+
+            <Button Text="Sačuvaj vježbu"
+                    Command="{Binding SaveCommand}"
+                    IsEnabled="{Binding IsNotSaving}"
+                    Margin="0,8,0,0" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

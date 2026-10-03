@@ -20,4 +20,18 @@ public class ExerciseService(AppDbContext db)
 
   public async Task<Exercise?> GetByIdAsync(Guid id) =>
       await db.Exercises.FindAsync(id);
+
+  public async Task<Exercise> CreateAsync(string name, string muscleGroup, string equipment)
+  {
+    var exercise = new Exercise
+    {
+      Id = Guid.NewGuid(),
+      Name = name,
+      MuscleGroup = muscleGroup,
+      Equipment = equipment
+    };
+    db.Exercises.Add(exercise);
+    await db.SaveChangesAsync();
+    return exercise;
+  }
 }

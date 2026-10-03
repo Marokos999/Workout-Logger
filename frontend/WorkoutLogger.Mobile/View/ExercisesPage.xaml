@@ -7,6 +7,10 @@
              x:Name="Root"
              Title="Vježbe">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+ Dodaj" Command="{Binding GoToCreateCommand}" />
+    </ContentPage.ToolbarItems>
+
     <Grid RowDefinitions="Auto,*">
 
         <ActivityIndicator Grid.Row="0"

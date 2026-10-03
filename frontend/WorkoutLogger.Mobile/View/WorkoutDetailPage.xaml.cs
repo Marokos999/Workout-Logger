@@ -12,10 +12,17 @@ public partial class WorkoutDetailPage : ContentPage
         BindingContext = _vm = vm;
     }
 
+    private bool _firstAppear = true;
+
     protected override void OnAppearing()
     {
         base.OnAppearing();
         if (Guid.TryParse(_vm.SessionId, out var id))
             _ = _vm.LoadAsync(id);
+
+        if (!_firstAppear && _vm.IsActive)
+            _vm.StartRestTimer();
+
+        _firstAppear = false;
     }
 }

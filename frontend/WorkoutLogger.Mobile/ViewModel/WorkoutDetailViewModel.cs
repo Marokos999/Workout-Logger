@@ -13,6 +13,50 @@ public partial class WorkoutDetailViewModel(WorkoutService workouts) : Observabl
     [ObservableProperty] private bool _isActive;
     [ObservableProperty] private bool _hasEnded;
 
+    [ObservableProperty] private int _restSeconds = DefaultRest;
+    [ObservableProperty] private bool _isTimerRunning;
+    [ObservableProperty] private bool _timerFinished;
+
+    private CancellationTokenSource? _timerCts;
+    private const int DefaultRest = 90;
+
+    public string RestDisplay => $"{RestSeconds / 60}:{RestSeconds % 60:D2}";
+
+    partial void OnRestSecondsChanged(int value) => OnPropertyChanged(nameof(RestDisplay));
+
+    public void StartRestTimer()
+    {
+        _timerCts?.Cancel();
+        _timerCts = new CancellationTokenSource();
+        RestSeconds = DefaultRest;
+        IsTimerRunning = true;
+        TimerFinished = false;
+        _ = RunTimerAsync(_timerCts.Token);
+    }
+
+    [RelayCommand]
+    private void ResetTimer()
+    {
+        _timerCts?.Cancel();
+        RestSeconds = DefaultRest;
+        IsTimerRunning = false;
+        TimerFinished = false;
+    }
+
+    private async Task RunTimerAsync(CancellationToken ct)
+    {
+        while (RestSeconds > 0 && !ct.IsCancellationRequested)
+        {
+            await Task.Delay(1000, ct).ConfigureAwait(false);
+            if (ct.IsCancellationRequested) break;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                RestSeconds--;
+                if (RestSeconds == 0) { IsTimerRunning = false; TimerFinished = true; }
+            });
+        }
+    }
+
     partial void OnSessionChanged(WorkoutSessionResponse? value)
     {
         IsActive = value?.EndedAt is null;

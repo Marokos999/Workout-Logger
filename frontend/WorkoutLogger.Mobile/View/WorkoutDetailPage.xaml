@@ -13,7 +13,7 @@
                      IsEnabled="{Binding IsActive}" />
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto,Auto,*,Auto">
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
 
         <ActivityIndicator Grid.Row="0"
                            IsRunning="{Binding IsBusy}"
@@ -69,7 +69,54 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Button Grid.Row="3"
+        <Border Grid.Row="3"
+                IsVisible="{Binding IsActive}"
+                Margin="16,4"
+                Padding="16,10"
+                Stroke="#E8E0F7"
+                StrokeThickness="1"
+                BackgroundColor="#F5F0FF">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12" />
+            </Border.StrokeShape>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+                <Label Grid.Column="0"
+                       Text="⏱ Odmor"
+                       VerticalOptions="Center"
+                       FontSize="14"
+                       TextColor="#512BD4"
+                       FontAttributes="Bold" />
+                <Label Grid.Column="1"
+                       Text="{Binding RestDisplay}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       FontSize="22"
+                       FontAttributes="Bold"
+                       TextColor="#512BD4">
+                    <Label.Triggers>
+                        <DataTrigger TargetType="Label" Binding="{Binding TimerFinished}" Value="True">
+                            <Setter Property="TextColor" Value="Green" />
+                        </DataTrigger>
+                    </Label.Triggers>
+                </Label>
+                <Label Grid.Column="2"
+                       Text="✓ Gotovo!"
+                       IsVisible="{Binding TimerFinished}"
+                       VerticalOptions="Center"
+                       TextColor="Green"
+                       FontSize="13"
+                       Margin="0,0,8,0" />
+                <Button Grid.Column="3"
+                        Text="↺"
+                        Command="{Binding ResetTimerCommand}"
+                        WidthRequest="40" HeightRequest="40"
+                        BackgroundColor="Transparent"
+                        TextColor="#512BD4"
+                        FontSize="18" />
+            </Grid>
+        </Border>
+
+        <Button Grid.Row="4"
                 Text="Završi trening"
                 Command="{Binding EndWorkoutCommand}"
                 Margin="16"
