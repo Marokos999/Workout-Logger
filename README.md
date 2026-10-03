@@ -12,6 +12,21 @@ Android workout tracking app built with **.NET MAUI** and **ASP.NET Core 10**. L
 - Automatic token refresh — the app silently renews expired tokens in the background; on final failure it logs out cleanly
 - Platform-specific API base URL via compiler directives (Android emulator `10.0.2.2`, iOS/Windows `localhost`)
 
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/02-workouts-empty.png" width="200"/><br/><sub>Workouts</sub></td>
+    <td align="center"><img src="docs/screenshots/03-create-workout.png" width="200"/><br/><sub>New Workout</sub></td>
+    <td align="center"><img src="docs/screenshots/05-exercises.png" width="200"/><br/><sub>Exercise Catalogue</sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/07-progress.png" width="200"/><br/><sub>Progress</sub></td>
+    <td align="center"><img src="docs/screenshots/08-profile.png" width="200"/><br/><sub>Profile &amp; Language</sub></td>
+    <td></td>
+  </tr>
+</table>
+
 ## Tech stack
 
 | Area | Technology |
