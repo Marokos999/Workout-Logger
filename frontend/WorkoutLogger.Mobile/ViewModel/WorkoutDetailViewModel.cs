@@ -86,7 +86,7 @@ public partial class WorkoutDetailViewModel(WorkoutService workouts) : Observabl
     {
         if (!Guid.TryParse(_sessionId, out var id)) return;
         await workouts.PatchEndSessionAsync(id);
-        await LoadAsync(id);
+        await Shell.Current.GoToAsync($"workout-summary?sessionId={_sessionId}");
     }
 
     [RelayCommand]

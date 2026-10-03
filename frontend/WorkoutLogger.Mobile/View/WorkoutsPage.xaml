@@ -53,6 +53,16 @@
                                            TextColor="Gray" FontSize="13" />
                                     <Label Text="{Binding EndedAt, StringFormat='✓ Završen: {0:HH:mm}'}"
                                            TextColor="#512BD4" FontSize="12" FontAttributes="Bold" />
+                                    <Label Text="{Binding Notes}"
+                                           TextColor="Gray" FontSize="12"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="1">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding Notes}" Value="{x:Null}">
+                                                <Setter Property="IsVisible" Value="False" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1"
                                         Text="✕"

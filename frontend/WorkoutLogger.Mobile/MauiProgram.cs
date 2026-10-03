@@ -26,7 +26,15 @@ public static class MauiProgram
 
         LiveCharts.Configure(config => config.AddSkiaSharp());
 
+#if ANDROID
         const string baseUrl = "http://10.0.2.2:5107/";
+#elif WINDOWS
+        const string baseUrl = "http://localhost:5107/";
+#elif IOS
+        const string baseUrl = "http://localhost:5107/";
+#else
+        const string baseUrl = "http://localhost:5107/";
+#endif
 
         // HTTP klijenti
         builder.Services.AddHttpClient<AuthService>(c => c.BaseAddress = new Uri(baseUrl));
@@ -50,6 +58,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ProgressViewModel>();
         builder.Services.AddTransient<CreateExerciseViewModel>();
         builder.Services.AddTransient<ProfileViewModel>();
+        builder.Services.AddTransient<WorkoutSummaryViewModel>();
 
         // Pages
         builder.Services.AddTransient<LoginPage>();
@@ -62,6 +71,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ExerciseDetailPage>();
         builder.Services.AddTransient<CreateExercisePage>();
         builder.Services.AddTransient<ProfilePage>();
+        builder.Services.AddTransient<WorkoutSummaryPage>();
         builder.Services.AddTransient<ProgressPage>();
 
 #if DEBUG
