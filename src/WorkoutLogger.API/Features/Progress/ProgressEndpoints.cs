@@ -1,3 +1,5 @@
+using System.Security.Claims;
+
 namespace WorkoutLogger.API.Features.Progress;
 
 public static class ProgressEndpoints

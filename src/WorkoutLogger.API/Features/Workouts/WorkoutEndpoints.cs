@@ -1,6 +1,6 @@
+using System.Security.Claims;
 using WorkoutLogger.API.Infrastructure;
 using WorkoutLogger.Contracts.Responses;
-using WorkoutLogger.API.Domain;
 
 namespace WorkoutLogger.API.Features.Workouts;
 
