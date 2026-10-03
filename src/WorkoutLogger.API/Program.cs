@@ -8,6 +8,7 @@ using Scalar.AspNetCore;
 using WorkoutLogger.API.Features.Workouts;
 using WorkoutLogger.API.Features.Exercises;
 using WorkoutLogger.API.Features.Progress;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
@@ -19,6 +20,20 @@ builder.Services.AddScoped<WorkoutService>();
 builder.Services.AddScoped<ExerciseService>();
 builder.Services.AddScoped<ProgressService>();
 
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("auth", ctx => RateLimitPartition.GetFixedWindowLimiter(
+        ctx.Connection.RemoteIpAddress?.ToString() ?? "anon",
+        _ => new FixedWindowRateLimiterOptions
+        {
+            PermitLimit = 10,
+            Window = TimeSpan.FromMinutes(1),
+            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+            QueueLimit = 0
+        }));
+    options.RejectionStatusCode = 429;
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -39,6 +54,17 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+app.UseExceptionHandler(errApp => errApp.Run(async ctx =>
+{
+    ctx.Response.StatusCode = 500;
+    ctx.Response.ContentType = "application/json";
+    var feature = ctx.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+    var message = app.Environment.IsDevelopment() && feature?.Error is not null
+        ? feature.Error.Message
+        : "Interna greška servera.";
+    await ctx.Response.WriteAsJsonAsync(new { error = message });
+}));
+
 if (!app.Environment.IsEnvironment("Testing"))
 {
     using var scope = app.Services.CreateScope();
@@ -51,6 +77,7 @@ app.MapScalarApiReference();
 
 app.UseHttpsRedirection();
 
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 

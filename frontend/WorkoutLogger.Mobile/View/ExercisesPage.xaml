@@ -11,14 +11,19 @@
         <ToolbarItem Text="+ Dodaj" Command="{Binding GoToCreateCommand}" />
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto,*">
+    <Grid RowDefinitions="Auto,Auto,*">
 
-        <ActivityIndicator Grid.Row="0"
+        <SearchBar Grid.Row="0"
+                   Text="{Binding SearchText}"
+                   Placeholder="Pretraži vježbe..."
+                   Margin="16,8" />
+
+        <ActivityIndicator Grid.Row="1"
                            IsRunning="{Binding IsBusy}"
                            IsVisible="{Binding IsBusy}"
                            Margin="0,8" />
 
-        <CollectionView Grid.Row="1"
+        <CollectionView Grid.Row="2"
                         ItemsSource="{Binding Exercises}"
                         Margin="16">
             <CollectionView.ItemTemplate>

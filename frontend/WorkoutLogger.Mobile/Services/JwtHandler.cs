@@ -10,6 +10,15 @@ public class JwtHandler(AuthService auth) : DelegatingHandler
             request.Headers.Authorization =
                 new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
-        return await base.SendAsync(request, cancellationToken);
+        var response = await base.SendAsync(request, cancellationToken);
+
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            auth.Logout();
+            MainThread.BeginInvokeOnMainThread(async () =>
+                await Shell.Current.GoToAsync("//login"));
+        }
+
+        return response;
     }
 }

@@ -18,46 +18,56 @@
                            IsVisible="{Binding IsBusy}"
                            Margin="0,8" />
 
-        <CollectionView Grid.Row="1"
-                        ItemsSource="{Binding Sessions}"
-                        Margin="16">
-            <CollectionView.EmptyView>
-                <Label Text="Nema treninga. Dodaj prvi!"
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center"
-                       TextColor="Gray" />
-            </CollectionView.EmptyView>
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Null}">
-                    <Border Stroke="#E0E0E0" StrokeThickness="1" Margin="0,4" Padding="12">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding Source={x:Reference Root}, Path=BindingContext.SelectCommand}"
-                                CommandParameter="{Binding .}" />
-                        </Border.GestureRecognizers>
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="8" />
-                        </Border.StrokeShape>
-                        <Grid ColumnDefinitions="*,Auto">
-                            <VerticalStackLayout Grid.Column="0" Spacing="4">
-                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16" />
-                                <Label Text="{Binding StartedAt, StringFormat='Početak: {0:dd.MM.yyyy HH:mm}'}"
-                                       TextColor="Gray" FontSize="13" />
-                                <Label Text="{Binding EndedAt, StringFormat='Kraj: {0:dd.MM.yyyy HH:mm}'}"
-                                       TextColor="Gray" FontSize="13" />
-                            </VerticalStackLayout>
-                            <Button Grid.Column="1"
-                                    Text="Obriši"
-                                    BackgroundColor="Red"
-                                    TextColor="White"
-                                    FontSize="12"
-                                    Command="{Binding Source={x:Reference Root}, Path=BindingContext.DeleteCommand}"
-                                    CommandParameter="{Binding Id}" />
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+        <RefreshView Grid.Row="1"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding LoadCommand}">
+            <CollectionView ItemsSource="{Binding Sessions}" Margin="16">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="12" Margin="0,48">
+                        <Label Text="💪" HorizontalOptions="Center" FontSize="48" />
+                        <Label Text="Nema treninga još uvijek."
+                               HorizontalOptions="Center"
+                               FontAttributes="Bold"
+                               FontSize="16" />
+                        <Label Text="Klikni + da kreiraš prvi trening."
+                               HorizontalOptions="Center"
+                               TextColor="Gray"
+                               FontSize="14" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Null}">
+                        <Border Stroke="#E0E0E0" StrokeThickness="1" Margin="0,4" Padding="12">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={x:Reference Root}, Path=BindingContext.SelectCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout Grid.Column="0" Spacing="3">
+                                    <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16" />
+                                    <Label Text="{Binding StartedAt, StringFormat='📅 {0:dd.MM.yyyy HH:mm}'}"
+                                           TextColor="Gray" FontSize="13" />
+                                    <Label Text="{Binding EndedAt, StringFormat='✓ Završen: {0:HH:mm}'}"
+                                           TextColor="#512BD4" FontSize="12" FontAttributes="Bold" />
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1"
+                                        Text="✕"
+                                        BackgroundColor="Transparent"
+                                        TextColor="Red"
+                                        FontSize="18"
+                                        VerticalOptions="Start"
+                                        Command="{Binding Source={x:Reference Root}, Path=BindingContext.DeleteCommand}"
+                                        CommandParameter="{Binding Id}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
 
     </Grid>
 

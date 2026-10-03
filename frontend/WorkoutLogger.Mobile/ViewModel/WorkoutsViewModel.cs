@@ -10,6 +10,7 @@ public partial class WorkoutsViewModel(WorkoutService workouts) : ObservableObje
 {
     [ObservableProperty] private ObservableCollection<WorkoutSessionResponse> _sessions = [];
     [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] private bool _isRefreshing;
 
     [RelayCommand]
     private async Task LoadAsync()
@@ -18,6 +19,7 @@ public partial class WorkoutsViewModel(WorkoutService workouts) : ObservableObje
         var result = await workouts.GetSessionsAsync();
         Sessions = new ObservableCollection<WorkoutSessionResponse>(result ?? []);
         IsBusy = false;
+        IsRefreshing = false;
     }
 
     [RelayCommand]

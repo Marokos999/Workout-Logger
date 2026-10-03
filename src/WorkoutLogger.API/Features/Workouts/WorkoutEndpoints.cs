@@ -1,3 +1,4 @@
+using WorkoutLogger.API.Infrastructure;
 using WorkoutLogger.Contracts.Responses;
 
 namespace WorkoutLogger.API.Features.Workouts;
@@ -24,6 +25,8 @@ public static class WorkoutEndpoints
 
     group.MapPost("/", async (CreateSessionRequest request, ClaimsPrincipal user, WorkoutService service) =>
     {
+      var err = Validate.Required(request.Name, "Name") ?? Validate.MaxLength(request.Name, 100, "Name");
+      if (err is not null) return err;
       var userId = Guid.Parse(user.FindFirstValue("sub")!);
       var session = await service.CreateSessionAsync(userId, request.Name, request.Notes);
       return Results.Created($"/api/workouts/{session.Id}", ToDto(session));
@@ -43,6 +46,10 @@ public static class WorkoutEndpoints
 
     group.MapPost("/{id:guid}/sets", async (Guid id, AddSetRequest request, ClaimsPrincipal user, WorkoutService service) =>
     {
+      var err = Validate.Range(request.SetNumber, 1, 100, "SetNumber")
+          ?? Validate.Range(request.Reps, 1, 1000, "Reps")
+          ?? Validate.Min(request.Weight, 0, "Weight");
+      if (err is not null) return err;
       var userId = Guid.Parse(user.FindFirstValue("sub")!);
       var set = await service.AddSetAsync(id, userId, request.ExerciseId, request.SetNumber, request.Reps, request.Weight, request.Notes);
       return Results.Created($"/api/workouts/{id}/set/{set.Id}", set);

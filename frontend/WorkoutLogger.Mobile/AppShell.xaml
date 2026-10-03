@@ -20,6 +20,9 @@
         <ShellContent Route="progress"
                       Title="Napredak"
                       ContentTemplate="{DataTemplate view:ProgressPage}" />
+        <ShellContent Route="profile"
+                      Title="Profil"
+                      ContentTemplate="{DataTemplate view:ProfilePage}" />
     </TabBar>
 
 </Shell>
