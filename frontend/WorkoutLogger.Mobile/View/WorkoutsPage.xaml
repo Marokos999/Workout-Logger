@@ -76,6 +76,20 @@
                         </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
+                <CollectionView.Footer>
+                    <StackLayout Padding="16,8">
+                        <Button Text="Učitaj još"
+                                Command="{Binding Source={x:Reference Root}, Path=BindingContext.LoadMoreCommand}"
+                                IsVisible="{Binding HasMore}"
+                                BackgroundColor="#512BD4"
+                                TextColor="White"
+                                CornerRadius="8" />
+                        <ActivityIndicator IsRunning="{Binding IsLoadingMore}"
+                                           IsVisible="{Binding IsLoadingMore}"
+                                           Color="#512BD4"
+                                           Margin="0,4" />
+                    </StackLayout>
+                </CollectionView.Footer>
             </CollectionView>
         </RefreshView>
 

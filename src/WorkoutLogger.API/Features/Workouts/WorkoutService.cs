@@ -6,11 +6,17 @@ namespace WorkoutLogger.API.Features.Workouts;
 
 public class WorkoutService(AppDbContext db)
 {
-  public async Task<List<WorkoutSession>> GetSessionAsync(Guid userId) =>
-        await db.WorkoutSessions
-                .Where(w => w.UserId == userId)
-                .OrderByDescending(w => w.StartedAt)
-                .ToListAsync();
+  public async Task<(List<WorkoutSession> Items, int TotalCount)> GetSessionsPagedAsync(Guid userId, int page, int pageSize)
+  {
+      var query = db.WorkoutSessions.Where(w => w.UserId == userId);
+      var total = await query.CountAsync();
+      var items = await query
+          .OrderByDescending(w => w.StartedAt)
+          .Skip((page - 1) * pageSize)
+          .Take(pageSize)
+          .ToListAsync();
+      return (items, total);
+  }
 
   public async Task<WorkoutSession?> GetSessionByIdAsync(Guid id, Guid userId) =>
         await db.WorkoutSessions

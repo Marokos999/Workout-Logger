@@ -5,8 +5,8 @@ namespace WorkoutLogger.Mobile.Services;
 
 public class WorkoutService(HttpClient http) : ApiService(http)
 {
-    public Task<List<WorkoutSessionResponse>?> GetSessionsAsync() =>
-        GetAsync<List<WorkoutSessionResponse>>("/api/workouts");
+    public Task<PagedResponse<WorkoutSessionResponse>?> GetSessionsAsync(int page = 1, int pageSize = 20) =>
+        GetAsync<PagedResponse<WorkoutSessionResponse>>($"/api/workouts?page={page}&pageSize={pageSize}");
 
     public Task<WorkoutSessionResponse?> GetSessionByIdAsync(Guid id) =>
         GetAsync<WorkoutSessionResponse>($"/api/workouts/{id}");

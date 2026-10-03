@@ -1,5 +1,6 @@
 using WorkoutLogger.API.Infrastructure;
 using WorkoutLogger.Contracts.Responses;
+using WorkoutLogger.API.Domain;
 
 namespace WorkoutLogger.API.Features.Workouts;
 
@@ -9,11 +10,15 @@ public static class WorkoutEndpoints
   {
     var group = app.MapGroup("/api/workouts").RequireAuthorization();
 
-    group.MapGet("/", async (ClaimsPrincipal user, WorkoutService service) =>
+    group.MapGet("/", async (ClaimsPrincipal user, WorkoutService service,
+        int page = 1, int pageSize = 20) =>
     {
+      if (page < 1) page = 1;
+      if (pageSize is < 1 or > 100) pageSize = 20;
       var userId = Guid.Parse(user.FindFirstValue("sub")!);
-      var sessions = await service.GetSessionAsync(userId);
-      return Results.Ok(sessions.Select(ToDto));
+      var (items, total) = await service.GetSessionsPagedAsync(userId, page, pageSize);
+      return Results.Ok(new PagedResponse<WorkoutSessionResponse>(
+          items.Select(ToDto).ToList(), page, pageSize, total));
     });
 
     group.MapGet("/{id:guid}", async (Guid id, ClaimsPrincipal user, WorkoutService service) =>
