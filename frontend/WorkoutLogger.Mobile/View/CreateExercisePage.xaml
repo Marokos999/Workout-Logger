@@ -2,25 +2,33 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:WorkoutLogger.Mobile.ViewModel"
+             xmlns:svc="clr-namespace:WorkoutLogger.Mobile.Services"
              x:Class="WorkoutLogger.Mobile.View.CreateExercisePage"
              x:DataType="vm:CreateExerciseViewModel"
-             Title="Nova vježba">
+             Title="{Binding [PageNewExercise], Source={StaticResource Loc}}">
+
+    <ContentPage.Resources>
+        <x:Static Member="svc:LocalizationService.Instance" x:Key="Loc" />
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="16">
 
-            <Label Text="Naziv vježbe" FontAttributes="Bold" />
-            <Entry Text="{Binding Name}" Placeholder="npr. Bench Press" />
+            <Label Text="{Binding [ExerciseName], Source={StaticResource Loc}}" FontAttributes="Bold" />
+            <Entry Text="{Binding Name}"
+                   Placeholder="{Binding [ExerciseNameHint], Source={StaticResource Loc}}" />
 
-            <Label Text="Mišićna grupa" FontAttributes="Bold" />
-            <Entry Text="{Binding MuscleGroup}" Placeholder="npr. Chest" />
+            <Label Text="{Binding [MuscleGroupForm], Source={StaticResource Loc}}" FontAttributes="Bold" />
+            <Entry Text="{Binding MuscleGroup}"
+                   Placeholder="{Binding [ExerciseNameHint], Source={StaticResource Loc}}" />
 
-            <Label Text="Oprema" FontAttributes="Bold" />
-            <Entry Text="{Binding Equipment}" Placeholder="npr. Barbell" />
+            <Label Text="{Binding [EquipmentForm], Source={StaticResource Loc}}" FontAttributes="Bold" />
+            <Entry Text="{Binding Equipment}"
+                   Placeholder="{Binding [ExerciseNameHint], Source={StaticResource Loc}}" />
 
             <Label Text="{Binding ErrorMessage}" TextColor="Red" FontSize="13" />
 
-            <Button Text="Sačuvaj vježbu"
+            <Button Text="{Binding [SaveExercise], Source={StaticResource Loc}}"
                     Command="{Binding SaveCommand}"
                     IsEnabled="{Binding IsNotSaving}"
                     Margin="0,8,0,0" />

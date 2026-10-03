@@ -2,26 +2,29 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:WorkoutLogger.Mobile.ViewModel"
+             xmlns:svc="clr-namespace:WorkoutLogger.Mobile.Services"
              x:Class="WorkoutLogger.Mobile.View.WorkoutSummaryPage"
              x:DataType="vm:WorkoutSummaryViewModel"
-             Title="Trening završen"
+             Title="{Binding [PageSummary], Source={StaticResource Loc}}"
              Shell.NavBarIsVisible="True"
              Shell.BackButtonBehavior="{x:Null}">
+
+    <ContentPage.Resources>
+        <x:Static Member="svc:LocalizationService.Instance" x:Key="Loc" />
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="16">
 
-            <!-- Hero -->
             <VerticalStackLayout HorizontalOptions="Center" Spacing="6" Margin="0,16,0,8">
                 <Label Text="🎉" FontSize="56" HorizontalOptions="Center" />
                 <Label Text="{Binding WorkoutName}"
                        FontSize="22" FontAttributes="Bold"
                        HorizontalOptions="Center" HorizontalTextAlignment="Center" />
-                <Label Text="Odlično odrađeno!" TextColor="Gray"
-                       FontSize="14" HorizontalOptions="Center" />
+                <Label Text="{Binding [GreatJob], Source={StaticResource Loc}}"
+                       TextColor="Gray" FontSize="14" HorizontalOptions="Center" />
             </VerticalStackLayout>
 
-            <!-- Stats -->
             <Border Stroke="#E0E0E0" StrokeThickness="1" Padding="16">
                 <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
                 <Grid ColumnDefinitions="*,*,*" ColumnSpacing="8">
@@ -29,28 +32,28 @@
                         <Label Text="{Binding Duration}"
                                FontSize="20" FontAttributes="Bold"
                                HorizontalOptions="Center" TextColor="#512BD4" />
-                        <Label Text="Trajanje" FontSize="11" TextColor="Gray"
-                               HorizontalOptions="Center" />
+                        <Label Text="{Binding [Duration], Source={StaticResource Loc}}"
+                               FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center" Spacing="4">
                         <Label Text="{Binding TotalSets}"
                                FontSize="20" FontAttributes="Bold"
                                HorizontalOptions="Center" TextColor="#512BD4" />
-                        <Label Text="Serije" FontSize="11" TextColor="Gray"
-                               HorizontalOptions="Center" />
+                        <Label Text="{Binding [Sets], Source={StaticResource Loc}}"
+                               FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
                     </VerticalStackLayout>
                     <VerticalStackLayout Grid.Column="2" HorizontalOptions="Center" Spacing="4">
                         <Label Text="{Binding TotalVolume, StringFormat='{0:0}kg'}"
                                FontSize="20" FontAttributes="Bold"
                                HorizontalOptions="Center" TextColor="#512BD4" />
-                        <Label Text="Volumen" FontSize="11" TextColor="Gray"
-                               HorizontalOptions="Center" />
+                        <Label Text="{Binding [Volume], Source={StaticResource Loc}}"
+                               FontSize="11" TextColor="Gray" HorizontalOptions="Center" />
                     </VerticalStackLayout>
                 </Grid>
             </Border>
 
-            <!-- Exercise breakdown -->
-            <Label Text="Po vježbama" FontSize="16" FontAttributes="Bold" Margin="0,4,0,0" />
+            <Label Text="{Binding [ByExercises], Source={StaticResource Loc}}"
+                   FontSize="16" FontAttributes="Bold" Margin="0,4,0,0" />
 
             <CollectionView ItemsSource="{Binding Exercises}">
                 <CollectionView.ItemTemplate>
@@ -60,15 +63,15 @@
                             <Grid ColumnDefinitions="*,Auto">
                                 <VerticalStackLayout Grid.Column="0" Spacing="2">
                                     <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="14" />
-                                    <Label Text="{Binding Sets, StringFormat='{0} serija'}"
+                                    <Label Text="{Binding Sets, StringFormat='{0} sets'}"
                                            TextColor="Gray" FontSize="12" />
                                 </VerticalStackLayout>
                                 <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" Spacing="2">
                                     <Label Text="{Binding MaxWeight, StringFormat='{0:0.##} kg'}"
                                            FontAttributes="Bold" FontSize="14" TextColor="#512BD4"
                                            HorizontalOptions="End" />
-                                    <Label Text="max težina" TextColor="Gray" FontSize="11"
-                                           HorizontalOptions="End" />
+                                    <Label Text="{Binding [MaxWeightLabel], Source={StaticResource Loc}}"
+                                           TextColor="Gray" FontSize="11" HorizontalOptions="End" />
                                 </VerticalStackLayout>
                             </Grid>
                         </Border>
@@ -76,7 +79,7 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <Button Text="Završi"
+            <Button Text="{Binding [Finish], Source={StaticResource Loc}}"
                     Command="{Binding DoneCommand}"
                     Margin="0,8,0,16" />
 

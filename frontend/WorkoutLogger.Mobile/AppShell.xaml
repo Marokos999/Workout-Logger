@@ -3,7 +3,12 @@
        xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:view="clr-namespace:WorkoutLogger.Mobile.View"
+       xmlns:svc="clr-namespace:WorkoutLogger.Mobile.Services"
        FlyoutBehavior="Disabled">
+
+    <Shell.Resources>
+        <x:Static Member="svc:LocalizationService.Instance" x:Key="Loc" />
+    </Shell.Resources>
 
     <ShellContent Route="login"
                   Shell.NavBarIsVisible="False"
@@ -12,16 +17,16 @@
 
     <TabBar>
         <ShellContent Route="workouts"
-                      Title="Treninzi"
+                      Title="{Binding [TabWorkouts], Source={StaticResource Loc}}"
                       ContentTemplate="{DataTemplate view:WorkoutsPage}" />
         <ShellContent Route="exercises"
-                      Title="Vježbe"
+                      Title="{Binding [TabExercises], Source={StaticResource Loc}}"
                       ContentTemplate="{DataTemplate view:ExercisesPage}" />
         <ShellContent Route="progress"
-                      Title="Napredak"
+                      Title="{Binding [TabProgress], Source={StaticResource Loc}}"
                       ContentTemplate="{DataTemplate view:ProgressPage}" />
         <ShellContent Route="profile"
-                      Title="Profil"
+                      Title="{Binding [TabProfile], Source={StaticResource Loc}}"
                       ContentTemplate="{DataTemplate view:ProfilePage}" />
     </TabBar>
 

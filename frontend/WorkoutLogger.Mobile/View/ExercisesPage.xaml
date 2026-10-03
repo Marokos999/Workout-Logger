@@ -2,20 +2,26 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:WorkoutLogger.Mobile.ViewModel"
+             xmlns:svc="clr-namespace:WorkoutLogger.Mobile.Services"
              x:Class="WorkoutLogger.Mobile.View.ExercisesPage"
              x:DataType="vm:ExercisesViewModel"
              x:Name="Root"
-             Title="Vježbe">
+             Title="{Binding [PageExercises], Source={StaticResource Loc}}">
+
+    <ContentPage.Resources>
+        <x:Static Member="svc:LocalizationService.Instance" x:Key="Loc" />
+    </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="+ Dodaj" Command="{Binding GoToCreateCommand}" />
+        <ToolbarItem Text="{Binding [AddExercise], Source={StaticResource Loc}}"
+                     Command="{Binding GoToCreateCommand}" />
     </ContentPage.ToolbarItems>
 
     <Grid RowDefinitions="Auto,Auto,*">
 
         <SearchBar Grid.Row="0"
                    Text="{Binding SearchText}"
-                   Placeholder="Pretraži vježbe..."
+                   Placeholder="{Binding [SearchExercises], Source={StaticResource Loc}}"
                    Margin="16,8" />
 
         <ActivityIndicator Grid.Row="1"

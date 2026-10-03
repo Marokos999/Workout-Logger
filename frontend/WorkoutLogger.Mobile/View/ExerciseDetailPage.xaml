@@ -2,9 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:WorkoutLogger.Mobile.ViewModel"
+             xmlns:svc="clr-namespace:WorkoutLogger.Mobile.Services"
              x:Class="WorkoutLogger.Mobile.View.ExerciseDetailPage"
              x:DataType="vm:ExerciseDetailViewModel"
              Title="{Binding Exercise.Name}">
+
+    <ContentPage.Resources>
+        <x:Static Member="svc:LocalizationService.Instance" x:Key="Loc" />
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="16">
@@ -13,21 +18,23 @@
                                IsVisible="{Binding IsBusy}"
                                Margin="0,8" />
 
-            <!-- Exercise info -->
             <Border Stroke="#E0E0E0" StrokeThickness="1" Padding="16">
                 <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
                 <VerticalStackLayout Spacing="10">
                     <Label Text="{Binding Exercise.Name}" FontSize="22" FontAttributes="Bold" />
                     <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="6">
-                        <Label Grid.Row="0" Grid.Column="0" Text="Mišićna grupa:" TextColor="Gray" FontAttributes="Bold" />
+                        <Label Grid.Row="0" Grid.Column="0"
+                               Text="{Binding [MuscleGroup], Source={StaticResource Loc}}"
+                               TextColor="Gray" FontAttributes="Bold" />
                         <Label Grid.Row="0" Grid.Column="1" Text="{Binding Exercise.MuscleGroup}" />
-                        <Label Grid.Row="1" Grid.Column="0" Text="Oprema:" TextColor="Gray" FontAttributes="Bold" />
+                        <Label Grid.Row="1" Grid.Column="0"
+                               Text="{Binding [Equipment], Source={StaticResource Loc}}"
+                               TextColor="Gray" FontAttributes="Bold" />
                         <Label Grid.Row="1" Grid.Column="1" Text="{Binding Exercise.Equipment}" />
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Personal record -->
             <Border Stroke="#512BD4" StrokeThickness="1.5" Padding="16"
                     IsVisible="{Binding HasPr}">
                 <Border.StrokeShape><RoundRectangle CornerRadius="12" /></Border.StrokeShape>
@@ -40,24 +47,23 @@
                 <HorizontalStackLayout Spacing="12" VerticalOptions="Center">
                     <Label Text="🏆" FontSize="36" VerticalOptions="Center" />
                     <VerticalStackLayout Spacing="2">
-                        <Label Text="Lični rekord" FontSize="13" TextColor="#512BD4" FontAttributes="Bold" />
+                        <Label Text="{Binding [PersonalRecord], Source={StaticResource Loc}}"
+                               FontSize="13" TextColor="#512BD4" FontAttributes="Bold" />
                         <Label Text="{Binding PersonalRecord, StringFormat='{0:0.##} kg'}"
                                FontSize="32" FontAttributes="Bold" TextColor="#512BD4" />
                     </VerticalStackLayout>
                 </HorizontalStackLayout>
             </Border>
 
-            <!-- History header -->
-            <Label Text="Historija napretka"
+            <Label Text="{Binding [ProgressHistory], Source={StaticResource Loc}}"
                    FontSize="17" FontAttributes="Bold"
                    Margin="0,4,0,0"
                    IsVisible="{Binding HasPr}" />
 
-            <!-- History list -->
             <CollectionView ItemsSource="{Binding History}" IsVisible="{Binding HasPr}">
                 <CollectionView.EmptyView>
-                    <Label Text="Nema podataka još uvijek." TextColor="Gray"
-                           HorizontalOptions="Center" Margin="0,12" />
+                    <Label Text="{Binding [NoDataYet], Source={StaticResource Loc}}"
+                           TextColor="Gray" HorizontalOptions="Center" Margin="0,12" />
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="{x:Null}">
@@ -74,13 +80,12 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
-            <!-- No data state -->
             <VerticalStackLayout HorizontalOptions="Center" Spacing="8" Margin="0,32"
                                  IsVisible="{Binding IsEmpty}">
                 <Label Text="💪" FontSize="40" HorizontalOptions="Center" />
-                <Label Text="Još nisi radio ovu vježbu."
+                <Label Text="{Binding [NoExerciseYet], Source={StaticResource Loc}}"
                        FontSize="15" TextColor="Gray" HorizontalOptions="Center" />
-                <Label Text="Dodaj je u trening da vidiš napredak."
+                <Label Text="{Binding [AddToWorkout], Source={StaticResource Loc}}"
                        FontSize="13" TextColor="Gray" HorizontalOptions="Center" />
             </VerticalStackLayout>
 
